@@ -6,7 +6,8 @@
   "typings": "built/router.d.ts",
   "scripts": {
     "test": "mocha built/tests.js",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "postinstall": "typings install && npm run build"
   },
   "repository": {
     "type": "git",

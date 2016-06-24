@@ -105,7 +105,7 @@ declare module "koa" {
         /**
          * Should any be Koa?.Context? 
          */
-        export type Next = Function|Promise<any>|IterableIterator<any>;
+        export type Next = ()=> Promise<any>;
         /**
          * NEW! 
          */

@@ -1,10 +1,12 @@
-import * as Koa from 'koa';
+import * as Koa from 'koa'
 import * as methods from 'methods';
 import * as pathToRegexp from 'path-to-regexp';
 import Options = pathToRegexp.Options;
 
 const Debug = require('debug')
 const debug = Debug('koa-route');
+
+export type KoaMiddleware  = (ctx:Koa.Context, next:()=> any) => any ;
 
 /**  
  * params are route segmens, last parameter is 'next' and is a function;
@@ -20,7 +22,7 @@ export type RouteAction = (...params:any[]) => void ;
  * @opts: pathToRegexp.Options
  * returns: Koa.Middleware? 
  */
-export type Route = (pathExpression:string, action:RouteAction , opts?: Options ) => Koa.Middleware;  
+export type Route = (pathExpression:string, action:RouteAction , opts?: Options ) => (ctx:Koa.Context, next:()=> any) => any ;  
 
 /**
  * for Dynamic access, Note: keys are lowercase 
@@ -36,7 +38,7 @@ let create = (method?:string) : Route => {
   
   if (method) method = method.toUpperCase();
   
-  let fty:Route = (path, rAcrtion, opts?) : Koa.Middleware => {
+  let fty:Route = (path, rAcrtion, opts?) : KoaMiddleware => {
     
     const re = pathToRegexp(path, opts);
 
@@ -127,3 +129,5 @@ function matches(ctx:Koa.Context, method:string) {
   if (method === 'GET' && ctx.method === 'HEAD') return true;
   return false;
 }
+
+

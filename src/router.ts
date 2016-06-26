@@ -22,7 +22,7 @@ export type RouteAction = (...params:any[]) => void ;
  * @opts: pathToRegexp.Options
  * returns: Koa.Middleware? 
  */
-export type Route = (pathExpression:string, action:RouteAction , opts?: Options ) => (ctx:Koa.Context, next:()=> any) => any ;  
+export type Route = (pathExpression:string, action:RouteAction , opts?: Options ) => KoaMiddleware ;  
 
 /**
  * for Dynamic access, Note: keys are lowercase 
@@ -38,7 +38,7 @@ let create = (method?:string) : Route => {
   
   if (method) method = method.toUpperCase();
   
-  let fty:Route = (path, rAcrtion, opts?) : KoaMiddleware => {
+  let fty:Route = (path, routeAction, opts?) : KoaMiddleware => {
     
     const re = pathToRegexp(path, opts);
 
@@ -59,7 +59,7 @@ let create = (method?:string) : Route => {
         debug('%s %s matches %s %j', ctx.method, path, ctx.path, args);
         args.push(next);    
         // Apply ctx:Koa.Context to cAction.this, sends url's segments + next as args 
-        await rAcrtion.apply(ctx, args);
+        await routeAction.apply(ctx, args);
         //additional test needed to see side effect of sending next as last parameter 
         next();
         return;

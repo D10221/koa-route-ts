@@ -16,9 +16,9 @@ test.onFinish( err => {
 })
 
 test('it waits', (t) => {
-    this.timeout = 5000;
+    
     const app = new Koa();
-    app.use(router.get('/this', async function (args, next) {
+    app.use(router.get('/this', async function (args) {
         let ctx = this as Koa.Context;
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -33,15 +33,15 @@ test('it waits', (t) => {
             }, 1000);
         });
     }));
+    
     request(listen(app))
         .get('/this')
         .expect(200)
         .expect('ok')
         .end((err, res) => {
             if (err) {
-                throw (err);
-            }
-            console.log('Success');
+                t.fail(err.message);
+            }             
             t.end();
         });
 })

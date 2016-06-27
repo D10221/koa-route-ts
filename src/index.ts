@@ -14,7 +14,7 @@ export type KoaMiddleware  = (ctx:Koa.Context, next:()=> any) => any ;
  * it's this, is Koa.Context.
  * Return Type should be a promise, I think...
  */
-export type RouteAction = (...params:any[]) => void ;
+export type RouteAction = (...params:any[]) => Promise<any> ;
 
 /**
  * @pathExpression: string 'route to match'

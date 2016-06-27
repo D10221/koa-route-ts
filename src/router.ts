@@ -59,8 +59,7 @@ let create = (method?:string) : Route => {
         debug('%s %s matches %s %j', ctx.method, path, ctx.path, args);
         args.push(next);    
         // Apply ctx:Koa.Context to cAction.this, sends url's segments + next as args 
-        await routeAction.apply(ctx, args);
-        //additional test needed to see side effect of sending next as last parameter 
+        await routeAction.apply(ctx, args);         
         next();
         return;
       }

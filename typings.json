@@ -10,7 +10,8 @@
     "supertest": "registry:dt/supertest#1.1.0+20160317120654"
   },
   "devDependencies": {
-    "chai": "registry:npm/chai#3.5.0+20160415060238"
+    "chai": "registry:npm/chai#3.5.0+20160415060238",
+    "tape": "registry:npm/tape#4.0.0+20160622192935"
   },
   "globalDevDependencies": {
     "mocha": "registry:env/mocha#2.2.5+20160321223601"

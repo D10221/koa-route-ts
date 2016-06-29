@@ -159,4 +159,35 @@ describe('route params', function () {
       .get('/api/users/1/posts')
       .end(function () { });
   })
+
+  it('it waits', (done) => {
+    
+    const app = new Koa();
+    app.use(route.get('/this', async function (args) {
+        let ctx = this as Koa.Context;
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                try {
+                    ctx.body = "ok"
+                    console.log('Body Set');
+                    resolve(true)
+                } catch (error) {
+                    console.log(error.mesasge);
+                    reject(error);
+                }
+            }, 1000);
+        });
+    }));
+    
+    request(listen(app))
+        .get('/this')
+        .expect(200)
+        .expect('ok')
+        .end((err, res) => {
+            if (err) {
+                throw err;
+            }             
+            done();            
+        });
+})
 })

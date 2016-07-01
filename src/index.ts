@@ -6,7 +6,8 @@ import Options = pathToRegexp.Options;
 const Debug = require('debug')
 const debug = Debug('koa-route');
 
-export type KoaMiddleware  = (ctx:Koa.Context, next:()=> any) => any ;
+export type Middleware = (ctx: Koa.Context, next: () => Promise<void>) => Promise<void>;
+
 export type Next = ()=> Promise<any>;
 
 /**  
@@ -14,7 +15,7 @@ export type Next = ()=> Promise<any>;
  * Can't be a generator* function,
  * Return Type should be a promise 'just add async""
  */
-export type RouteAction = (ctx:Koa.Context, next) => Promise<any> ;
+//export type RouteAction = (ctx:Koa.Context, next) => Promise<any> ;
 
 /**
  * @pathExpression: string 'route to match'
@@ -22,7 +23,7 @@ export type RouteAction = (ctx:Koa.Context, next) => Promise<any> ;
  * @opts: pathToRegexp.Options
  * returns: Koa.Middleware? 
  */
-export type Route = (pathExpression:string, action:RouteAction , opts?: Options ) => KoaMiddleware ;  
+export type Route = (pathExpression:string, action:Middleware , opts?: Options ) => Middleware ;  
 
 /**
  * for Dynamic access, Note: keys are lowercase 
@@ -30,15 +31,19 @@ export type Route = (pathExpression:string, action:RouteAction , opts?: Options 
 export const Methods: Map<string,Route> = new Map<string,Route>();
 
 /**
- * Route factory
+ * Route factory of middleware factory 
  * @method: string, as name from module 'methods'
- * returns: Route() function
+ * returns: Route function as middleware factory 
  */
 let create = (method?:string) : Route => {
   
   if (method) method = method.toUpperCase();
   
-  let fty:Route = (path, routeAction, opts?) : KoaMiddleware => {
+  /**
+   * Accetps : Koa.Middleware signature : 'Route' must call 'next()';  
+   */
+  let routedMiddlewareFty: Route = (path, mdw, opts?) : Middleware => {
+    
     
     const re = pathToRegexp(path, opts);
 
@@ -58,9 +63,8 @@ let create = (method?:string) : Route => {
         const args = m.slice(1).map(decode);
         debug('%s %s matches %s %j', ctx.method, path, ctx.path, args);
         ctx['args'] = args; 
-        routeAction(ctx, next);         
-        //next();
-        return;
+        // Middleware signature : 'Route' must call 'next()';                            
+        return mdw(ctx, next);
       }
 
       // miss      
@@ -68,8 +72,8 @@ let create = (method?:string) : Route => {
     }
   }  
   // set dynamic access to this method 
-  Methods.set((method ||'ALL').toLowerCase(), fty) ;
-  return fty;
+  Methods.set((method ||'ALL').toLowerCase(), routedMiddlewareFty) ;
+  return routedMiddlewareFty;
 }
 
 //Let Typescript know about the methods  

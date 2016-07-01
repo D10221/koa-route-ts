@@ -1,31 +1,34 @@
 {
-  "name": "koa-route-ts",
+  "name": "krouter",
   "version": "0.0.0",
-  "description": "freeStyle node 6+ version of 'koa-route' for Typescript and Koa 2.+",
+  "description": "Koa 2.+ router, typed, based on koa-route",
   "main": "built/index.js",
   "typings": "built/index.d.ts",
   "scripts": {
     "clean": "rm -rf built",
+    "debug:win": "SET DEBUG=krouter:*",
+    "debug:nix": "export DEBUG=krouter:*",
     "test": "npm run build && mocha built/tests.js",
-    "build": "node_modules/.bin/tsc -p .",
-    "postinstall": "node_modules/.bin/typings install && npm run build"
+    "build": "node_modules/.bin/tsc -p ."    
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/D10221/koa-route-ts.git"
+    "url": "git+https://github.com/D10221/krouter.git"
   },
   "keywords": [
     "koa",
     "route",
-    "ts"
+    "ts",
+    "typescript"
   ],
-  "author": "?",
+  "author": "D10221",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/D10221/k-route/issues"
+    "url": "https://github.com/D10221/krouter/issues"
   },
-  "homepage": "https://github.com/D10221/k-route#readme",
+  "homepage": "https://github.com/D10221/krouter#readme",
   "dependencies": {
+    "debug": "^2.2.0",
     "koa": "^2.0.0",
     "path-to-regexp": "^1.5.3"
   },

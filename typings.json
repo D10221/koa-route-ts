@@ -1,6 +1,7 @@
 {
   "name": "koa-route-ts",
   "dependencies": {
+    "debug": "registry:npm/debug#2.0.0+20160511151334",
     "methods": "registry:npm/methods#1.0.0+20160211003958"
   },
   "globalDependencies": {

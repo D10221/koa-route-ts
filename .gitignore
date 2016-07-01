@@ -1,5 +1,6 @@
 node_modules/
-built/
+# can't ingore built to use it as npm+git
+# built/
 typings/
 .vscode/
 .idea/

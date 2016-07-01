@@ -69,28 +69,5 @@ describe('sometimes', () => {
     })
 })
 
-/**
-* Ok on fridays, otherwise not found
-*/
-const check = async (ctx, next) => {
-    if(isFriday){
-        next();
-        return;
-    }
-    ctx.body = 'only on fridays';
-    status = 404;
-}
-
-const app = new Koa();
-use(app,
-    router.get('/always', async (ctx, next)=> { ctx.status = 200} ),
-    router.get('/sometimes', compose(
-        check ,  
-        async (ctx, next)=> {
-            ctx.body = 'is Friday :)'             
-        } ),
-    ))
-);
-
 (1)https://github.com/koajs/route
 

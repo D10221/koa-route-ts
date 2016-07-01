@@ -1,2 +1,2 @@
-//import './index_test';
-import './kompose_test';
+import './index_test';
+import './compose_test';

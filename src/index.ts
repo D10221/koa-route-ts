@@ -7,14 +7,14 @@ const Debug = require('debug')
 const debug = Debug('koa-route');
 
 export type KoaMiddleware  = (ctx:Koa.Context, next:()=> any) => any ;
+export type Next = ()=> Promise<any>;
 
 /**  
  * params are route segmens, last parameter is 'next' and is a function;
  * Can't be a generator* function,
- * it's this, is Koa.Context.
- * Return Type should be a promise, I think...
+ * Return Type should be a promise 'just add async""
  */
-export type RouteAction = (...params:any[]) => Promise<any> ;
+export type RouteAction = (ctx:Koa.Context, next) => Promise<any> ;
 
 /**
  * @pathExpression: string 'route to match'
@@ -44,7 +44,7 @@ let create = (method?:string) : Route => {
 
     debug('%s %s -> %s', method || 'ALL', path, re);
 
-    return async function (ctx, next: any ) {
+    return async function (ctx, next: Next ) {
       // match method 
       if (!matches(ctx, method)) {
           next();
@@ -57,10 +57,9 @@ let create = (method?:string) : Route => {
         //collect route segments 
         const args = m.slice(1).map(decode);
         debug('%s %s matches %s %j', ctx.method, path, ctx.path, args);
-        args.push(next);    
-        // Apply ctx:Koa.Context to cAction.this, sends url's segments + next as args 
-        await routeAction.apply(ctx, args);         
-        next();
+        ctx['args'] = args; 
+        routeAction(ctx, next);         
+        //next();
         return;
       }
 

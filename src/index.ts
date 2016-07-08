@@ -64,7 +64,7 @@ let create = (method?:string) : Route => {
         debug('%s %s matches %s %j', ctx.method, path, ctx.path, args);
         ctx['args'] = args; 
         // Middleware signature : 'Route' must call 'next()';                            
-        return mdw(ctx, next);
+        return await mdw(ctx, next);
       }
 
       // miss      
